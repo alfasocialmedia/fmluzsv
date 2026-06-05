@@ -8,7 +8,6 @@ import {
   Volume2,
   VolumeX,
   Radio,
-  Heart,
   Share2,
   ChevronDown,
   ChevronUp,
@@ -78,6 +77,24 @@ export function LivePlayer() {
 
   const toggleMute = useCallback(() => {
     setIsMuted((prev) => !prev);
+  }, []);
+
+  const handleShare = useCallback(async () => {
+    const shareData = {
+      title: "FM Luz San Vicente - 107.5 MHz",
+      text: "Escuchá FM Luz San Vicente, tu radio cristiana en 107.5 MHz. Música, fe y comunidad las 24 horas.",
+      url: window.location.href,
+    };
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(shareData.url);
+        alert("¡Link copiado al portapapeles!");
+      }
+    } catch {
+      // User cancelled share
+    }
   }, []);
 
   return (
@@ -170,10 +187,6 @@ export function LivePlayer() {
 
               {/* Play controls */}
               <div className="flex items-center justify-center gap-6 mb-4">
-                <button className="p-2 rounded-xl hover:bg-muted/50 transition-colors">
-                  <Heart className="w-5 h-5 text-muted-foreground hover:text-red-400 transition-colors" />
-                </button>
-
                 <button
                   onClick={togglePlay}
                   disabled={isLoading}
@@ -187,9 +200,16 @@ export function LivePlayer() {
                     <Play className="w-7 h-7 fill-current ml-1" />
                   )}
                 </button>
+              </div>
 
-                <button className="p-2 rounded-xl hover:bg-muted/50 transition-colors">
-                  <Share2 className="w-5 h-5 text-muted-foreground hover:text-primary transition-colors" />
+              {/* Share button */}
+              <div className="flex justify-center mb-4">
+                <button
+                  onClick={handleShare}
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl hover:bg-muted/50 transition-colors text-muted-foreground hover:text-primary"
+                >
+                  <Share2 className="w-4 h-4" />
+                  <span className="text-xs font-medium">Compartir</span>
                 </button>
               </div>
 
