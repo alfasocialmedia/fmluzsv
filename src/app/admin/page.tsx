@@ -18,6 +18,9 @@ import {
   Type,
   Hash,
   Phone,
+  MessageSquareHeart,
+  Check,
+  X,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -91,12 +94,21 @@ const dayOptions = [
   { value: "domingos", label: "Domingos" },
 ];
 
-type Tab = "general" | "media" | "seo" | "schedule";
+interface Testimony {
+  id: string;
+  name: string;
+  message: string;
+  approved: boolean;
+  createdAt: string;
+}
+
+type Tab = "general" | "media" | "seo" | "schedule" | "testimonios";
 
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState<Tab>("general");
   const [settings, setSettings] = useState<Settings>(defaultSettings);
   const [programs, setPrograms] = useState<Program[]>([]);
+  const [testimonies, setTestimonies] = useState<Testimony[]>([]);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [uploading, setUploading] = useState<string | null>(null);
@@ -120,6 +132,14 @@ export default function AdminPage() {
         if (Array.isArray(data) && data.length > 0) {
           setPrograms(data);
         }
+      })
+      .catch(() => {});
+
+    // Load testimonies
+    fetch("/api/admin/testimonios")
+      .then((r) => r.json())
+      .then((data) => {
+        if (Array.isArray(data)) setTestimonies(data);
       })
       .catch(() => {});
   }, []);
@@ -213,11 +233,36 @@ export default function AdminPage() {
     setSaving(false);
   };
 
+  const approveTestimony = async (id: string, approved: boolean) => {
+    try {
+      await fetch("/api/admin/testimonios", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, approved }),
+      });
+      setTestimonies((prev) =>
+        prev.map((t) => (t.id === id ? { ...t, approved } : t))
+      );
+    } catch {
+      alert("Error al actualizar testimonio");
+    }
+  };
+
+  const deleteTestimony = async (id: string) => {
+    try {
+      await fetch(`/api/admin/testimonios?id=${id}`, { method: "DELETE" });
+      setTestimonies((prev) => prev.filter((t) => t.id !== id));
+    } catch {
+      alert("Error al eliminar testimonio");
+    }
+  };
+
   const tabs: { id: Tab; label: string; icon: typeof Settings }[] = [
     { id: "general", label: "General", icon: Settings },
     { id: "media", label: "Imágenes", icon: Image },
     { id: "seo", label: "SEO", icon: Globe },
     { id: "schedule", label: "Programación", icon: Calendar },
+    { id: "testimonios", label: "Testimonios", icon: MessageSquareHeart },
   ];
 
   return (
@@ -756,6 +801,153 @@ export default function AdminPage() {
                   </div>
                 );
               })}
+            </motion.div>
+          )}
+
+          {/* TESTIMONIOS TAB */}
+          {activeTab === "testimonios" && (
+            <motion.div
+              key="testimonios"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="space-y-4"
+            >
+              <h2 className="font-bold text-lg flex items-center gap-2 mb-2">
+                <MessageSquareHeart className="w-5 h-5 text-primary" />
+                Testimonios
+              </h2>
+
+              {testimonies.length === 0 && (
+                <div className="p-8 rounded-2xl bg-muted/30 border border-border/30 text-center">
+                  <MessageSquareHeart className="w-10 h-10 text-muted-foreground mx-auto mb-2" />
+                  <p className="text-sm text-muted-foreground">
+                    No hay testimonios aún.
+                  </p>
+                </div>
+              )}
+
+              {/* Pending testimonies */}
+              {testimonies.filter((t) => !t.approved).length > 0 && (
+                <div>
+                  <h3 className="font-semibold text-sm text-amber-600 mb-2 uppercase tracking-wider">
+                    Pendientes de aprobación
+                  </h3>
+                  <div className="space-y-3">
+                    {testimonies
+                      .filter((t) => !t.approved)
+                      .map((testimony) => (
+                        <div
+                          key={testimony.id}
+                          className="p-4 rounded-2xl bg-amber-50 border border-amber-200"
+                        >
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 mb-1">
+                                <div className="w-8 h-8 rounded-full bg-amber-200 flex items-center justify-center text-amber-700 font-bold text-xs shrink-0">
+                                  {testimony.name.charAt(0).toUpperCase()}
+                                </div>
+                                <div>
+                                  <p className="font-semibold text-sm">
+                                    {testimony.name}
+                                  </p>
+                                  <p className="text-xs text-muted-foreground">
+                                    {new Date(testimony.createdAt).toLocaleDateString("es-AR", {
+                                      year: "numeric",
+                                      month: "short",
+                                      day: "numeric",
+                                      hour: "2-digit",
+                                      minute: "2-digit",
+                                    })}
+                                  </p>
+                                </div>
+                              </div>
+                              <p className="text-sm mt-2 leading-relaxed">
+                                {testimony.message}
+                              </p>
+                            </div>
+                            <div className="flex gap-1.5 shrink-0">
+                              <button
+                                onClick={() => approveTestimony(testimony.id, true)}
+                                className="p-2 rounded-lg bg-emerald-100 hover:bg-emerald-200 text-emerald-700 transition-colors"
+                                title="Aprobar"
+                              >
+                                <Check className="w-4 h-4" />
+                              </button>
+                              <button
+                                onClick={() => deleteTestimony(testimony.id)}
+                                className="p-2 rounded-lg bg-red-100 hover:bg-red-200 text-red-700 transition-colors"
+                                title="Eliminar"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Approved testimonies */}
+              {testimonies.filter((t) => t.approved).length > 0 && (
+                <div>
+                  <h3 className="font-semibold text-sm text-emerald-600 mb-2 uppercase tracking-wider">
+                    Aprobados (visibles en el sitio)
+                  </h3>
+                  <div className="space-y-3">
+                    {testimonies
+                      .filter((t) => t.approved)
+                      .map((testimony) => (
+                        <div
+                          key={testimony.id}
+                          className="p-4 rounded-2xl bg-card border border-border/30"
+                        >
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 mb-1">
+                                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs shrink-0">
+                                  {testimony.name.charAt(0).toUpperCase()}
+                                </div>
+                                <div>
+                                  <p className="font-semibold text-sm">
+                                    {testimony.name}
+                                  </p>
+                                  <p className="text-xs text-muted-foreground">
+                                    {new Date(testimony.createdAt).toLocaleDateString("es-AR", {
+                                      year: "numeric",
+                                      month: "short",
+                                      day: "numeric",
+                                    })}
+                                  </p>
+                                </div>
+                              </div>
+                              <p className="text-sm mt-2 leading-relaxed">
+                                {testimony.message}
+                              </p>
+                            </div>
+                            <div className="flex gap-1.5 shrink-0">
+                              <button
+                                onClick={() => approveTestimony(testimony.id, false)}
+                                className="p-2 rounded-lg hover:bg-muted text-muted-foreground transition-colors"
+                                title="Desaprobar"
+                              >
+                                <X className="w-4 h-4" />
+                              </button>
+                              <button
+                                onClick={() => deleteTestimony(testimony.id)}
+                                className="p-2 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
+                                title="Eliminar"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              )}
             </motion.div>
           )}
         </AnimatePresence>

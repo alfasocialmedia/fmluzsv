@@ -5,6 +5,7 @@ import { HeroSection } from "@/components/radio/hero-section";
 import { LivePlayer } from "@/components/radio/live-player";
 import { AboutSection } from "@/components/radio/about-section";
 import { ContactSection } from "@/components/radio/contact-section";
+import { TestimonySection } from "@/components/radio/testimony-section";
 import { ScheduleOverlay } from "@/components/radio/schedule-overlay";
 import { MobileNav, DesktopNav } from "@/components/radio/navigation";
 import { Footer } from "@/components/radio/footer";
@@ -59,6 +60,7 @@ export default function Home() {
         <HeroSection onPlay={handlePlay} onShowSchedule={handleShowSchedule} />
         <LivePlayer />
         <AboutSection />
+        <TestimonySection />
         <ContactSection />
       </main>
 

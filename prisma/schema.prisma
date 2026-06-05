@@ -15,6 +15,15 @@ model SiteSetting {
   updatedAt DateTime @updatedAt
 }
 
+model Testimony {
+  id        String   @id @default(cuid())
+  name      String
+  message   String
+  approved  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model ScheduleProgram {
   id          String @id @default(cuid())
   day         String // "lunes-viernes" | "sabados" | "domingos"
