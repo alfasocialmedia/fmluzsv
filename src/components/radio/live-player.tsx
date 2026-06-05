@@ -13,10 +13,10 @@ import {
   ChevronDown,
   ChevronUp,
 } from "lucide-react";
-
-const STREAM_URL = "https://streaming.radiostreamlive.com/radioluzsanvicente";
+import { useSettings } from "@/hooks/use-settings";
 
 export function LivePlayer() {
+  const settings = useSettings();
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [volume, setVolume] = useState(0.7);
@@ -49,7 +49,7 @@ export function LivePlayer() {
     const audio = audioRef.current;
 
     if (isPlaying) {
-      audio.src = STREAM_URL;
+      audio.src = settings.streamUrl;
       audio.volume = isMuted ? 0 : volume;
       setIsLoading(true);
       audio.play().catch(() => {
@@ -125,9 +125,9 @@ export function LivePlayer() {
                     <Radio className="w-7 h-7" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-lg">FM Luz San Vicente</h3>
+                    <h3 className="font-bold text-lg">{settings.stationName}</h3>
                     <p className="text-sm text-muted-foreground">
-                      107.5 MHz • {currentTime}
+                      {settings.frequency} MHz • {currentTime}
                     </p>
                   </div>
                 </div>

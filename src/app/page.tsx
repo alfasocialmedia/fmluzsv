@@ -3,16 +3,17 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { HeroSection } from "@/components/radio/hero-section";
 import { LivePlayer } from "@/components/radio/live-player";
-import { ScheduleSection } from "@/components/radio/schedule-section";
 import { AboutSection } from "@/components/radio/about-section";
 import { ContactSection } from "@/components/radio/contact-section";
+import { ScheduleOverlay } from "@/components/radio/schedule-overlay";
 import { MobileNav, DesktopNav } from "@/components/radio/navigation";
 import { Footer } from "@/components/radio/footer";
 
-const sections = ["inicio", "envivo", "programacion", "contacto"];
+const sections = ["inicio", "envivo", "contacto"];
 
 export default function Home() {
   const [activeSection, setActiveSection] = useState("inicio");
+  const [scheduleOpen, setScheduleOpen] = useState(false);
   const observerRef = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
@@ -39,7 +40,6 @@ export default function Home() {
     const el = document.getElementById("envivo");
     if (el) {
       el.scrollIntoView({ behavior: "smooth" });
-      // Small delay to let the section scroll into view, then simulate a click on the play button
       setTimeout(() => {
         const playBtn = el.querySelector("button");
         if (playBtn) playBtn.click();
@@ -47,14 +47,17 @@ export default function Home() {
     }
   }, []);
 
+  const handleShowSchedule = useCallback(() => {
+    setScheduleOpen(true);
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col">
-      <DesktopNav activeSection={activeSection} />
+      <DesktopNav activeSection={activeSection} onScheduleClick={handleShowSchedule} />
 
       <main className="flex-1">
-        <HeroSection onPlay={handlePlay} />
+        <HeroSection onPlay={handlePlay} onShowSchedule={handleShowSchedule} />
         <LivePlayer />
-        <ScheduleSection />
         <AboutSection />
         <ContactSection />
       </main>
@@ -64,7 +67,10 @@ export default function Home() {
       {/* Spacer for mobile bottom nav */}
       <div className="h-16 md:hidden" />
 
-      <MobileNav activeSection={activeSection} />
+      <MobileNav activeSection={activeSection} onScheduleClick={handleShowSchedule} />
+
+      {/* Schedule overlay */}
+      <ScheduleOverlay isOpen={scheduleOpen} onClose={() => setScheduleOpen(false)} />
     </div>
   );
 }

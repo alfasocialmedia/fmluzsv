@@ -1,14 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   Home,
   Radio,
   Calendar,
   MessageCircle,
-  Menu,
-  X,
 } from "lucide-react";
 
 const navItems = [
@@ -18,7 +16,19 @@ const navItems = [
   { id: "contacto", label: "Contacto", icon: MessageCircle },
 ];
 
-export function MobileNav({ activeSection }: { activeSection: string }) {
+interface NavProps {
+  activeSection: string;
+  onScheduleClick: () => void;
+}
+
+export function MobileNav({ activeSection, onScheduleClick }: NavProps) {
+  const handleClick = (id: string, e: React.MouseEvent) => {
+    if (id === "programacion") {
+      e.preventDefault();
+      onScheduleClick();
+    }
+  };
+
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden glass-warm border-t border-border/50 safe-bottom">
       <div className="flex items-center justify-around px-2 pt-2 pb-1">
@@ -28,8 +38,9 @@ export function MobileNav({ activeSection }: { activeSection: string }) {
           return (
             <a
               key={item.id}
-              href={`#${item.id}`}
-              className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl transition-all duration-300 min-w-[64px] ${
+              href={item.id === "programacion" ? undefined : `#${item.id}`}
+              onClick={(e) => handleClick(item.id, e)}
+              className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl transition-all duration-300 min-w-[64px] cursor-pointer ${
                 isActive
                   ? "text-primary"
                   : "text-muted-foreground hover:text-foreground"
@@ -68,7 +79,7 @@ export function MobileNav({ activeSection }: { activeSection: string }) {
   );
 }
 
-export function DesktopNav({ activeSection }: { activeSection: string }) {
+export function DesktopNav({ activeSection, onScheduleClick }: NavProps) {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -76,6 +87,13 @@ export function DesktopNav({ activeSection }: { activeSection: string }) {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const handleClick = (id: string, e: React.MouseEvent) => {
+    if (id === "programacion") {
+      e.preventDefault();
+      onScheduleClick();
+    }
+  };
 
   return (
     <header
@@ -108,8 +126,9 @@ export function DesktopNav({ activeSection }: { activeSection: string }) {
             return (
               <a
                 key={item.id}
-                href={`#${item.id}`}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
+                href={item.id === "programacion" ? undefined : `#${item.id}`}
+                onClick={(e) => handleClick(item.id, e)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 cursor-pointer ${
                   isActive
                     ? "bg-primary/10 text-primary"
                     : "text-muted-foreground hover:text-foreground hover:bg-muted/50"

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Heart, Radio, Users, MapPin, Church, HandHeart } from "lucide-react";
+import { Heart, Radio, Users, MapPin, UsersRound, HandHeart } from "lucide-react";
 
 const values = [
   {
@@ -11,7 +11,7 @@ const values = [
       "Propagamos el mensaje de amor y esperanza de Cristo a cada hogar de San Vicente y alrededores.",
   },
   {
-    icon: Church,
+    icon: UsersRound,
     title: "Comunidad",
     description:
       "Somos más que una radio, somos una familia unida por la fe y el servicio a la comunidad.",
@@ -33,7 +33,7 @@ const values = [
 const stats = [
   { value: "107.5", label: "MHz FM", icon: Radio },
   { value: "24/7", label: "En vivo", icon: Users },
-  { value: "+10", label: "Años", icon: Church },
+  { value: "+10", label: "Años", icon: UsersRound },
   { value: "San Vicente", label: "Cobertura", icon: MapPin },
 ];
 

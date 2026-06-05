@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { Play, Radio } from "lucide-react";
 
-export function HeroSection({ onPlay }: { onPlay: () => void }) {
+export function HeroSection({ onPlay, onShowSchedule }: { onPlay: () => void; onShowSchedule: () => void }) {
   return (
     <section
       id="inicio"
@@ -13,10 +13,11 @@ export function HeroSection({ onPlay }: { onPlay: () => void }) {
       <div className="absolute inset-0">
         <img
           src="/hero-banner.png"
-          alt="FM Luz San Vicente"
+          alt=""
           className="w-full h-full object-cover"
+          aria-hidden="true"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/80 to-background" />
       </div>
 
       {/* Decorative elements */}
@@ -37,6 +38,17 @@ export function HeroSection({ onPlay }: { onPlay: () => void }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
+          {/* Official Logo */}
+          <div className="mb-8 flex justify-center">
+            <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full overflow-hidden shadow-2xl shadow-primary/20 border-2 border-primary/20">
+              <img
+                src="/station-logo.png"
+                alt="FM Luz San Vicente"
+                className="w-full h-full object-contain bg-white"
+              />
+            </div>
+          </div>
+
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-6">
             <Radio className="w-3.5 h-3.5 text-primary" />
             <span className="text-xs font-semibold text-primary tracking-wider uppercase">
@@ -84,12 +96,12 @@ export function HeroSection({ onPlay }: { onPlay: () => void }) {
             Escuchar en Vivo
           </button>
 
-          <a
-            href="#programacion"
+          <button
+            onClick={onShowSchedule}
             className="flex items-center gap-2 px-6 py-4 rounded-2xl font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all duration-300"
           >
             Ver Programación
-          </a>
+          </button>
         </motion.div>
 
         {/* Frequency badge */}
