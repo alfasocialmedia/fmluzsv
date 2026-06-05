@@ -28,3 +28,31 @@ Stage Summary:
 - Official logo (LOGO 3D.png) integrated as station logo and favicon
 - Admin panel functional with stream config, image upload, SEO, schedule management
 - Duplicate text issue fixed
+---
+Task ID: 1
+Agent: Main Agent
+Task: Add "Descargá Nuestra App" download button section + admin configurable URL
+
+Work Log:
+- Added `appDownloadUrl` field to SiteSettings interface and defaults in use-settings hook
+- Added `appDownloadUrl` field to admin Settings interface and defaultSettings
+- Added `Download` icon import to admin page
+- Created new "App Móvil" section in admin General tab with URL input field and helper text
+- Created `/src/components/radio/download-app-section.tsx` component with:
+  - Dark gradient background card with decorative blurs
+  - Left side: "App Móvil" badge, "Descargá Nuestra App" title, description text, Google Play style button (in Spanish: "Disponible en Google Play")
+  - Right side: Phone illustration with radio icon, fake equalizer, and floating "Gratis" badge
+  - Conditional rendering: section only appears when `appDownloadUrl` is configured in admin
+- Imported and integrated DownloadAppSection into home page between TestimonySection and ContactSection
+- Ran lint check - passed clean
+- Verified with Agent Browser - all features working correctly:
+  - Section hidden when no URL configured
+  - Admin "App Móvil" field visible and functional
+  - Section appears with Google Play button after URL is saved
+  - Button links to correct URL
+
+Stage Summary:
+- Feature complete: Download App section with Google Play style button in Spanish
+- Admin can configure app download URL from General tab
+- Section conditionally renders only when URL is set
+- All existing functionality preserved

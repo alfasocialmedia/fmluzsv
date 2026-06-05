@@ -21,6 +21,7 @@ import {
   MessageSquareHeart,
   Check,
   X,
+  Download,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -37,6 +38,7 @@ interface Settings {
   instagram?: string;
   facebook?: string;
   location?: string;
+  appDownloadUrl?: string;
 }
 
 interface Program {
@@ -64,6 +66,7 @@ const defaultSettings: Settings = {
   instagram: "",
   facebook: "",
   location: "San Vicente, Buenos Aires, Argentina",
+  appDownloadUrl: "",
 };
 
 const iconOptions = [
@@ -378,6 +381,32 @@ export default function AdminPage() {
                         className="w-full px-4 py-2.5 rounded-xl bg-muted/30 border border-border/50 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/30 transition-all"
                       />
                     </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-6 rounded-2xl bg-card border border-border/30">
+                <h2 className="font-bold text-lg mb-4 flex items-center gap-2">
+                  <Download className="w-5 h-5 text-primary" />
+                  App Móvil
+                </h2>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-1.5">
+                      URL de descarga de la App (Google Play / App Store)
+                    </label>
+                    <input
+                      type="url"
+                      value={settings.appDownloadUrl || ""}
+                      onChange={(e) =>
+                        setSettings({ ...settings, appDownloadUrl: e.target.value })
+                      }
+                      placeholder="https://play.google.com/store/apps/details?id=..."
+                      className="w-full px-4 py-2.5 rounded-xl bg-muted/30 border border-border/50 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/30 transition-all"
+                    />
+                    <p className="text-xs text-muted-foreground mt-1.5">
+                      Si completás este campo, se mostrará la sección &quot;Descargá nuestra App&quot; en la página principal. Dejalo vacío para ocultarla.
+                    </p>
                   </div>
                 </div>
               </div>

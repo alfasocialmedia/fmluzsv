@@ -15,6 +15,7 @@ interface SiteSettings {
   instagram: string;
   facebook: string;
   location: string;
+  appDownloadUrl: string;
 }
 
 const defaults: SiteSettings = {
@@ -30,6 +31,7 @@ const defaults: SiteSettings = {
   instagram: "",
   facebook: "",
   location: "San Vicente, Buenos Aires, Argentina",
+  appDownloadUrl: "",
 };
 
 let cachedSettings: SiteSettings | null = null;
