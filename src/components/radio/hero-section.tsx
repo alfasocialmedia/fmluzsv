@@ -17,7 +17,7 @@ export function HeroSection({ onPlay, onShowSchedule }: { onPlay: () => void; on
           className="w-full h-full object-cover"
           aria-hidden="true"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/80 to-background" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background via-background/95 to-background" />
       </div>
 
       {/* Decorative elements */}
@@ -38,17 +38,6 @@ export function HeroSection({ onPlay, onShowSchedule }: { onPlay: () => void; on
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
-          {/* Official Logo */}
-          <div className="mb-8 flex justify-center">
-            <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full overflow-hidden shadow-2xl shadow-primary/20 border-2 border-primary/20">
-              <img
-                src="/station-logo.png"
-                alt="FM Luz San Vicente"
-                className="w-full h-full object-contain bg-white"
-              />
-            </div>
-          </div>
-
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-6">
             <Radio className="w-3.5 h-3.5 text-primary" />
             <span className="text-xs font-semibold text-primary tracking-wider uppercase">
