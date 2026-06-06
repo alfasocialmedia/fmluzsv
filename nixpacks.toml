@@ -1,3 +1,4 @@
 [phases.setup]
 nixPkgs = ["...", "openssl"]
+nixLibs = ["...", "openssl"]
 aptPkgs = ["...", "openssl", "libssl-dev"]
