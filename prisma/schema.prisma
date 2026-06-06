@@ -1,16 +1,22 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-1.1.x", "debian-openssl-3.0.x", "linux-musl", "linux-musl-openssl-3.0.x"]
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
+model AdminUser {
+  id       String @id @default(cuid())
+  password String // Hash de la contraseña encriptada
+}
+
 model SiteSetting {
-  id    String @id @default(cuid())
-  key   String @unique
-  value String
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String   @db.Text
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -18,21 +24,21 @@ model SiteSetting {
 model Testimony {
   id        String   @id @default(cuid())
   name      String
-  message   String
+  message   String   @db.Text
   approved  Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model ScheduleProgram {
-  id          String @id @default(cuid())
-  day         String // "lunes-viernes" | "sabados" | "domingos"
-  time        String // "06:00 - 08:00"
+  id          String   @id @default(cuid())
+  day         String   // "lunes-viernes" | "sabados" | "domingos"
+  time        String   // "06:00 - 08:00"
   name        String
-  description String
-  icon        String // icon name
-  color       String // tailwind color class
-  order       Int    @default(0)
+  description String   @db.Text
+  icon        String   // icon name
+  color       String   // tailwind color class
+  order       Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }

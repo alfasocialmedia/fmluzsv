@@ -42,7 +42,7 @@ export function useSettings() {
   useEffect(() => {
     if (cachedSettings) return;
 
-    fetch("/api/admin/settings")
+    fetch("/api/ctrl-radio/settings")
       .then((r) => r.json())
       .then((data) => {
         if (data && Object.keys(data).length > 0) {
